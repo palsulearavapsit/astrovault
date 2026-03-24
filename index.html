@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Astronomy Image Cloud Gallery — Upload, explore, and manage stunning astronomy images stored on Firebase Cloud."/>
+  <title>AstroVault — Astronomy Cloud Gallery</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ===== STARFIELD BACKGROUND ===== -->
+  <canvas id="starfield"></canvas>
+
+  <!-- ===== HEADER / NAVBAR ===== -->
+  <header class="navbar">
+    <div class="nav-logo">
+      <i class="fas fa-meteor nav-icon"></i>
+      <span class="logo-text">AstroVault</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#gallery-section" class="nav-link">Gallery</a>
+      <a href="#upload-section" class="nav-link">Upload</a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="hero-tag">☁️ Powered by Firebase Cloud</p>
+      <h1 class="hero-title">Explore the <span class="gradient-text">Universe</span></h1>
+      <p class="hero-subtitle">Upload, store, and browse stunning astronomy images from across the cosmos — galaxies, nebulae, planets, and beyond.</p>
+      <div class="hero-actions">
+        <a href="#upload-section" class="btn btn-primary">
+          <i class="fas fa-cloud-upload-alt"></i> Upload Image
+        </a>
+        <a href="#gallery-section" class="btn btn-ghost">
+          <i class="fas fa-images"></i> Browse Gallery
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-num" id="total-count">0</span>
+        <span class="stat-label">Images Stored</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">Cloud Scale</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">🔥</span>
+        <span class="stat-label">Firebase Backed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== UPLOAD SECTION ===== -->
+  <section class="section" id="upload-section">
+    <div class="section-header">
+      <h2 class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload Astronomy Image</h2>
+      <p class="section-sub">Share your cosmic captures with the universe</p>
+    </div>
+
+    <div class="upload-card">
+      <!-- Drop zone -->
+      <div class="drop-zone" id="drop-zone">
+        <div class="drop-icon"><i class="fas fa-image"></i></div>
+        <p class="drop-text">Drag & Drop your image here</p>
+        <p class="drop-or">— or —</p>
+        <label for="image-input" class="btn btn-primary choose-btn">
+          <i class="fas fa-folder-open"></i> Choose File
+        </label>
+        <input type="file" id="image-input" accept="image/jpeg,image/png" hidden/>
+        <p class="drop-hint">Accepted: JPG, PNG · Max 10 MB</p>
+      </div>
+
+      <!-- Image preview -->
+      <div class="preview-wrap" id="preview-wrap">
+        <img id="preview-img" alt="Preview" />
+        <button class="remove-preview" id="remove-preview" title="Remove"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Upload form -->
+      <form class="upload-form" id="upload-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="img-title"><i class="fas fa-heading"></i> Image Title <span class="req">*</span></label>
+            <input type="text" id="img-title" placeholder="e.g. Andromeda Galaxy" maxlength="80" />
+            <span class="error-msg" id="title-error">Title is required.</span>
+          </div>
+          <div class="form-group">
+            <label for="img-category"><i class="fas fa-tag"></i> Category <span class="req">*</span></label>
+            <select id="img-category">
+              <option value="">— Select Category —</option>
+              <option value="Galaxy">🌌 Galaxy</option>
+              <option value="Nebula">🌫️ Nebula</option>
+              <option value="Planet">🪐 Planet</option>
+              <option value="Star Cluster">⭐ Star Cluster</option>
+              <option value="Moon">🌙 Moon</option>
+              <option value="Black Hole">🕳️ Black Hole</option>
+              <option value="Comet">☄️ Comet</option>
+              <option value="Supernova">💥 Supernova</option>
+              <option value="Other">🔭 Other</option>
+            </select>
+            <span class="error-msg" id="category-error">Please select a category.</span>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-bar-bg">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+          <span class="progress-text" id="progress-text">0%</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary upload-btn" id="upload-btn">
+          <i class="fas fa-rocket"></i> Launch to Cloud
+        </button>
+      </form>
+
+      <!-- Upload status -->
+      <div class="upload-status" id="upload-status"></div>
+    </div>
+  </section>
+
+  <!-- ===== GALLERY SECTION ===== -->
+  <section class="section" id="gallery-section">
+    <div class="section-header">
+      <h2 class="section-title"><i class="fas fa-images"></i> Cosmic Gallery</h2>
+      <p class="section-sub">Browse images stored in the cloud</p>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="All">All</button>
+      <button class="filter-btn" data-filter="Galaxy">🌌 Galaxy</button>
+      <button class="filter-btn" data-filter="Nebula">🌫️ Nebula</button>
+      <button class="filter-btn" data-filter="Planet">🪐 Planet</button>
+      <button class="filter-btn" data-filter="Star Cluster">⭐ Star Cluster</button>
+      <button class="filter-btn" data-filter="Moon">🌙 Moon</button>
+      <button class="filter-btn" data-filter="Black Hole">🕳️ Black Hole</button>
+      <button class="filter-btn" data-filter="Comet">☄️ Comet</button>
+      <button class="filter-btn" data-filter="Supernova">💥 Supernova</button>
+      <button class="filter-btn" data-filter="Other">🔭 Other</button>
+    </div>
+
+    <!-- Gallery grid -->
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <i class="fas fa-satellite-dish"></i>
+      <h3>No images found</h3>
+      <p>No images match your filter, or the gallery is empty. Upload your first image!</p>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div class="loading-state" id="loading-state">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+  </section>
+
+  <!-- ===== LIGHTBOX MODAL ===== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <div class="lightbox-overlay" id="lightbox-overlay"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightbox-close" title="Close"><i class="fas fa-times"></i></button>
+      <img class="lightbox-img" id="lightbox-img" alt="Full preview" />
+      <div class="lightbox-info">
+        <h3 class="lightbox-title" id="lightbox-title"></h3>
+        <span class="lightbox-category" id="lightbox-category"></span>
+        <span class="lightbox-date" id="lightbox-date"></span>
+      </div>
+      <a class="btn btn-primary lightbox-download" id="lightbox-download" download target="_blank">
+        <i class="fas fa-download"></i> Download
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon"></span>
+    <span class="toast-msg" id="toast-msg"></span>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>🔭 AstroVault &mdash; Astronomy Cloud Gallery &nbsp;|&nbsp; Powered by <strong>Firebase</strong></p>
+    <p class="footer-sub">Data Science Engineering · Academic Project · 2024</p>
+  </footer>
+
+  <!-- ===== FIREBASE SDK (v9 compat) ===== -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+  <!-- ===== APP SCRIPT ===== -->
+  <script src="script.js"></script>
+</body>
+</html>

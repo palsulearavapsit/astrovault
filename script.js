@@ -8,15 +8,9 @@
 //    → Replace the values below with YOUR Firebase project config.
 //    → Get these from: Firebase Console → Project Settings → Your Apps → SDK setup
 // ============================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyCOywqX22tfJyhLc9RGMEbkdfU05I8OBBU",
-  authDomain: "ccproject-20f24.firebaseapp.com",
-  projectId: "ccproject-20f24",
-  storageBucket: "ccproject-20f24.firebasestorage.app",
-  messagingSenderId: "702388044295",
-  appId: "1:702388044295:web:b7ff90c0931fcd3ee720a2",
-  measurementId: "G-FMH2BN6JLL"
-};
+// ── ENVIRONMENT VARIABLES (moved to config.js) ────────
+// Loading configuration from separate, gitignored file
+const firebaseConfig = APP_CONFIG.FIREBASE;
 
 // ── Initialize Firebase App ──────────────────────────────────
 firebase.initializeApp(firebaseConfig);
@@ -31,7 +25,7 @@ const db = firebase.firestore();   // Firestore database (metadata)
 //   → Get your free API key at: https://api.imgbb.com
 //   → Sign up at imgbb.com → click your username → API
 // ============================================================
-const IMGBB_API_KEY = "6856249a6badb85e14b91a9bb517fd1a"; // ← paste your ImgBB key here
+const IMGBB_API_KEY = APP_CONFIG.IMGBB_API_KEY; // ← Load from config.js
 
 // ── Firestore collection name ────────────────────────────────
 const COLLECTION = "astronomy_images";

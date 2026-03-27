@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "ccproject-20f24",
     "public": ".",
     "ignore": [
       "firebase.json",

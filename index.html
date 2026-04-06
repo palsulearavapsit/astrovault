@@ -29,6 +29,7 @@
     <nav class="nav-links">
       <a href="#gallery-section" class="nav-link">Gallery</a>
       <a href="#upload-section" class="nav-link">Upload</a>
+      <a href="#stats-section" class="nav-link">Stats</a>
     </nav>
   </header>
 
@@ -59,6 +60,19 @@
       <div class="stat-card">
         <span class="stat-num">🔥</span>
         <span class="stat-label">Firebase Backed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS SECTION ===== -->
+  <section class="section" id="stats-section">
+    <div class="section-header">
+      <h2 class="section-title"><i class="fas fa-chart-bar"></i> Cloud Stats</h2>
+      <p class="section-sub">Live breakdown of your vault — powered by Firebase Firestore</p>
+    </div>
+    <div class="stats-card">
+      <div class="stats-grid" id="stats-grid">
+        <p class="stats-empty">No data yet — upload your first image!</p>
       </div>
     </div>
   </section>
@@ -98,9 +112,9 @@
             <span class="error-msg" id="title-error">Title is required.</span>
           </div>
           <div class="form-group">
-            <label for="img-category"><i class="fas fa-tag"></i> Category <span class="req">*</span></label>
+            <label for="img-category"><i class="fas fa-tag"></i> Category <span class="auto-badge">✨ Auto-detected</span></label>
             <select id="img-category">
-              <option value="">— Select Category —</option>
+              <option value="">🤖 Let Gemini decide</option>
               <option value="Galaxy">🌌 Galaxy</option>
               <option value="Nebula">🌫️ Nebula</option>
               <option value="Planet">🪐 Planet</option>
@@ -187,6 +201,8 @@
         <h3 class="lightbox-title" id="lightbox-title"></h3>
         <span class="lightbox-category" id="lightbox-category"></span>
         <span class="lightbox-date" id="lightbox-date"></span>
+        <p class="lightbox-description" id="lightbox-description"></p>
+        <div class="lightbox-tags" id="lightbox-tags"></div>
       </div>
       <a class="btn btn-primary lightbox-download" id="lightbox-download" download target="_blank">
         <i class="fas fa-download"></i> Download
@@ -205,6 +221,10 @@
     <p>🔭 AstroVault &mdash; Astronomy Cloud Gallery &nbsp;|&nbsp; Powered by <strong>Firebase</strong></p>
     <p class="footer-sub">Data Science Engineering · Academic Project · 2024</p>
   </footer>
+
+  <!-- ===== TENSORFLOW.JS (fallback AI tagger) ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"></script>
 
   <!-- ===== FIREBASE SDK (v9 compat) ===== -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>

@@ -800,3 +800,158 @@ header, section, footer, .lightbox, .toast { position: relative; z-index: 1; }
   .logo-text { font-size: 1.1rem; }
   .stat-num { font-size: 1.5rem; }
 }
+
+/* ============================================================
+   NEW FEATURES — Tags, Stats Dashboard
+   ============================================================ */
+
+
+/* ---------- Lightbox Description ---------- */
+.lightbox-description {
+  font-size: 0.9rem;
+  color: var(--text-200);
+  line-height: 1.6;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* ---------- AI Tag Chips ---------- */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.tag-chip {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  background: rgba(124, 58, 237, 0.18);
+  color: var(--accent-3);
+  border: 1px solid var(--accent-glow);
+  border-radius: 20px;
+  padding: 0.15rem 0.6rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* ---------- Lightbox Tags ---------- */
+.lightbox-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.lightbox-tags .tag-chip {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.75rem;
+}
+
+/* ---------- Stats Section ---------- */
+.stats-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: var(--shadow-card);
+}
+
+.stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stats-empty {
+  color: var(--text-300);
+  text-align: center;
+  font-style: italic;
+  padding: 1rem 0;
+}
+
+.card-delete-btn {
+  forced-color-adjust: none;
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 107, 107, 0.6);
+  background-color: rgba(15, 15, 30, 0.85) !important;
+  color: #ff6b6b;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+.card-delete-btn:hover {
+  background: #ff3b3b;
+  color: #fff;
+  border-color: #ff3b3b;
+  transform: scale(1.1);
+  box-shadow: 0 4px 14px rgba(255, 59, 59, 0.5);
+}
+
+.auto-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  font-weight: 600;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.3px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 40px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-cat-label {
+  font-size: 0.9rem;
+  color: var(--text-200);
+  white-space: nowrap;
+}
+
+.stat-bar-wrap {
+  background: rgba(255,255,255,0.06);
+  border-radius: 20px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  border-radius: 20px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 6px;
+}
+
+.stat-count {
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  color: var(--accent-3);
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .stat-row { grid-template-columns: 120px 1fr 30px; gap: 0.6rem; }
+  .stats-card { padding: 1.5rem; }
+}

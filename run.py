@@ -45,7 +45,10 @@ const APP_CONFIG = {{
     appId: "{env_vars.get('FIREBASE_APP_ID', '')}",
     measurementId: "{env_vars.get('FIREBASE_MEASUREMENT_ID', '')}"
   }},
-  IMGBB_API_KEY: "{env_vars.get('IMGBB_API_KEY', '')}"
+  IMGBB_API_KEY: "{env_vars.get('IMGBB_API_KEY', '')}",
+  GOOGLE_VISION_API_KEY: "{env_vars.get('GOOGLE_VISION_API_KEY', '')}",
+  HF_TOKEN: "{env_vars.get('HF_TOKEN', '')}",
+  GEMINI_API_KEY: "{env_vars.get('GEMINI_API_KEY', '')}"
 }};
 """
     try:
@@ -56,7 +59,7 @@ const APP_CONFIG = {{
         print(f"❌ Error syncing config: {e}")
 
 # ===== AstroVault Server Configuration =====
-PORT = 5000
+PORT = int(os.environ.get("ASTROVAULT_PORT", "5000"))
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 class AstroHandler(http.server.SimpleHTTPRequestHandler):

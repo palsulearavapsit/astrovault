@@ -48,7 +48,11 @@ const APP_CONFIG = {{
   IMGBB_API_KEY: "{env_vars.get('IMGBB_API_KEY', '')}",
   GOOGLE_VISION_API_KEY: "{env_vars.get('GOOGLE_VISION_API_KEY', '')}",
   HF_TOKEN: "{env_vars.get('HF_TOKEN', '')}",
-  GEMINI_API_KEY: "{env_vars.get('GEMINI_API_KEY', '')}"
+  GEMINI_API_KEY: "{env_vars.get('GEMINI_API_KEY', '')}",
+  AWS_ACCESS_KEY_ID: "{env_vars.get('AWS_ACCESS_KEY_ID', '')}",
+  AWS_SECRET_ACCESS_KEY: "{env_vars.get('AWS_SECRET_ACCESS_KEY', '')}",
+  AWS_REGION: "{env_vars.get('AWS_REGION', '')}",
+  AWS_S3_BUCKET: "{env_vars.get('AWS_S3_BUCKET', '')}"
 }};
 """
     try:

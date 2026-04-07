@@ -17,18 +17,40 @@ firebase.initializeApp(firebaseConfig);
 
 // ── Firebase service references ──────────────────────────────
 const db = firebase.firestore();   // Firestore database (metadata)
-// NOTE: Firebase Storage replaced with ImgBB (free, no Blaze plan needed)
+
+// ── API Keys ──────────────────────────────────────────────────
+const GEMINI_API_KEY = APP_CONFIG.GEMINI_API_KEY;
+const GOOGLE_VISION_API_KEY = APP_CONFIG.GOOGLE_VISION_API_KEY;
+const HF_TOKEN = APP_CONFIG.HF_TOKEN;
 
 // ============================================================
-// IMGBB CONFIGURATION
-//   → Free image hosting API — no Firebase upgrade required
-//   → Get your free API key at: https://api.imgbb.com
-//   → Sign up at imgbb.com → click your username → API
+// AWS S3 CONFIGURATION
+//   → Images are stored in S3 bucket (public-read)
 // ============================================================
-const IMGBB_API_KEY = APP_CONFIG.IMGBB_API_KEY; // ← Load from config.js
-const GOOGLE_VISION_API_KEY = APP_CONFIG.GOOGLE_VISION_API_KEY; // ← Cloud Vision
-const HF_TOKEN = APP_CONFIG.HF_TOKEN;           // ← Hugging Face BLIP captioning
-const GEMINI_API_KEY = APP_CONFIG.GEMINI_API_KEY; // ← Google Gemini image description
+AWS.config.update({
+  accessKeyId: APP_CONFIG.AWS_ACCESS_KEY_ID,
+  secretAccessKey: APP_CONFIG.AWS_SECRET_ACCESS_KEY,
+  region: APP_CONFIG.AWS_REGION
+});
+const s3 = new AWS.S3();
+
+/** Upload a File to S3 and return the public URL */
+async function uploadToS3(file) {
+  const ext = file.name.split('.').pop();
+  const key = `uploads/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  return new Promise((resolve, reject) => {
+    s3.upload({
+      Bucket: APP_CONFIG.AWS_S3_BUCKET,
+      Key: key,
+      Body: file,
+      ContentType: file.type,
+      ACL: 'public-read'
+    }, (err, data) => {
+      if (err) reject(err);
+      else resolve(data.Location);
+    });
+  });
+}
 
 // ── Firestore collection name ────────────────────────────────
 const COLLECTION = "astronomy_images";
@@ -267,32 +289,13 @@ uploadForm.addEventListener("submit", async e => {
   uploadStatus.textContent = "";
 
   try {
-    // ── STEP 1: Upload image to ImgBB ─────────────────────
-    // Convert file to Base64 for ImgBB API
+    // ── STEP 1: Upload image to AWS S3 ────────────────────
     const base64Image = await fileToBase64(selectedFile);
 
-    // Simulate progress while uploading to ImgBB
+    uploadStatus.textContent = "☁️ Uploading to AWS S3...";
     animateProgress(10, 60, 800);
 
-    // Build form data for ImgBB API
-    const formData = new FormData();
-    formData.append("image", base64Image.split(",")[1]); // base64 string only
-    formData.append("name", `astrovault_${Date.now()}`);
-
-    // POST to ImgBB API
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-      method: "POST",
-      body: formData
-    });
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.error?.message || "ImgBB upload failed");
-    }
-
-    // Get the hosted image URL from ImgBB response
-    const downloadURL = result.data.url;
+    const downloadURL = await uploadToS3(selectedFile);
     animateProgress(60, 75, 300);
 
     // ── STEP 2 + 3: Analyse image with Gemini (category + tags + description) ─
@@ -327,7 +330,7 @@ uploadForm.addEventListener("submit", async e => {
 
   } catch (err) {
     console.error("Upload error:", err);
-    showToast("Upload failed: " + (err.message || "Check ImgBB API key."), "error");
+    showToast("Upload failed: " + (err.message || "Check S3 bucket config."), "error");
     uploadStatus.textContent = "❌ Upload failed.";
     setUploading(false);
     progressWrap.classList.remove("visible");
